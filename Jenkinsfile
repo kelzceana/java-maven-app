@@ -20,6 +20,9 @@ steps to deploy app from jenkins server to ec2 instance
 
 pipeline {
     agent any
+    tools{
+        maven 'maven3'
+    }
 
     environment {
         IMAGE_NAME = 'kelzceana/demo-app:1.4'
