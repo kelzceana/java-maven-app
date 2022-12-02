@@ -16,11 +16,7 @@ steps to deploy app from jenkins server to ec2 instance
 
 
 //import shared library to jenkinsfile
-library 'jenkins-shared-library@master', retriever: modernSCM(
-        [$class: 'GitSCMSource',
-         remote: 'https://github.com/kelzceana/jenkins-shared-library.git',
-        ]
-)
+@Library('jenkins-shared-library@master')_
 
 pipeline {
     agent any
