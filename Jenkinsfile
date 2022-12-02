@@ -50,7 +50,7 @@ pipeline {
         stage('deploy to AWS EC2 instance') {
             steps {
                 script {
-                    def dockerCmd = 'docker run -d -p 8080:8080 kelzceana/demo-app:1.4'
+                    def dockerCmd = "docker run -d -p 8080:8080 ${env.IMAGE_NAME}"
                         sshagent(['EC2-server-key']) {
                             // some block
                             sh "ssh -o StrictHostKeyChecking=no ec2-user@54.166.104.195 ${dockerCmd}"
