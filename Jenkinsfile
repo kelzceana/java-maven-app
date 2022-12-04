@@ -53,7 +53,7 @@ pipeline {
                         sshagent(['EC2-server-key']) {
                             // some block
                             sh "scp -o StrictHostKeyChecking=no docker-compose.yaml ec2-user@18.233.158.124:/home/ec2-user"
-                            sh "ssh -o StrictHostKeyChecking=no ec2-user@18.233.158.124 ${dockerCmd}"
+                            sh "ssh ec2-user@18.233.158.124 ${dockerCmd}"
                         }
                 }
             }
