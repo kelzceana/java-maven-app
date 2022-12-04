@@ -4,8 +4,8 @@ services:
       image: kelzceana/demo-app:1.4
       ports:
        - 8080:8080
-    postgress:
-      image: postgress:13
+    postgres:
+      image: postgres
       ports:
         - 5432:5432
       environment:
