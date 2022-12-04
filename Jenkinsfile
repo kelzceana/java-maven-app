@@ -8,9 +8,8 @@ steps to deploy app from jenkins server to ec2 instance
 5. ssh to ec2 instace 
 6. docker run with the image downloaded from docker hub
 
-
-
-
+*******
+run docker-compose on ec2 instance from jenkins server
 */
 
 
@@ -50,10 +49,11 @@ pipeline {
         stage('deploy to AWS EC2 instance') {
             steps {
                 script {
-                    def dockerCmd = "docker run -d -p 8080:8080 ${env.IMAGE_NAME}"
+                    def dockerCmd = "docker-compose -f docker-compose.yaml up --detach"
                         sshagent(['EC2-server-key']) {
                             // some block
-                            sh "ssh -o StrictHostKeyChecking=no ec2-user@54.166.104.195 ${dockerCmd}"
+                            sh "scp docker-compose.yaml ec2-user@54.91.175.207:/home/ec2-user"
+                            sh "ssh -o StrictHostKeyChecking=no ec2-user@54.91.175.207 ${dockerCmd}"
                                 }
                 }
             }
