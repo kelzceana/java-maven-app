@@ -23,12 +23,20 @@ pipeline {
         maven 'maven3'
     }
 
-    environment {
-        IMAGE_NAME = 'kelzceana/demo-app:1.4'
-    }
+    
     stages {
+        stage('increment new version') {
+            echo "incrementing app version"
+            sh "mvn build-helper:parse version versions:set \
+                -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} versions:commit"
+            def matcher = readFile(pom.xml) =~ '<version>(.+)</version>'
+            def version = matcher[0][1]
+            env.IMAGE_NAME = "$version-$BUILD_NUMBER"
+
+        }
         stage('build JAR file') {
             steps {
+                slackSend "started ${env.BUILD_NUMBER} "
                 script {
                     echo "Building JAR file"
                     buildJar()
@@ -49,7 +57,7 @@ pipeline {
         stage('deploy to AWS EC2 instance') {
             steps {
                 script {
-                    def shellCmd = "bash ./shell-cmds.sh"
+                    def shellCmd = "bash ./shell-cmds.sh ${env.IMAGE_NAME}"
                         sshagent(['EC2-server-key']) {
                             // some block
                             sh "scp shell-cmds.sh ec2-user@18.233.158.124:/home/ec2-user"
@@ -57,6 +65,12 @@ pipeline {
                             sh "ssh -o StrictHostKeyChecking=no ec2-user@18.233.158.124 ${shellCmd}"
                         }
                 }
+            }
+        }
+        post {
+            // only triggered when blue or green sign
+            success {
+                 slackSend "${env.BUILD_NUMBER} completed "
             }
         }
     }
