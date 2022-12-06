@@ -36,7 +36,8 @@ pipeline {
         }
         stage('build JAR file') {
             steps {
-                slackSend "started ${env.BUILD_NUMBER} "
+                slackSend channel: '#jenkins-cicd',
+                message: " ${env.JOB_NAME} build ${env.BUILD_NUMBER} started"
                 script {
                     echo "Building JAR file"
                     buildJar()
@@ -70,9 +71,10 @@ pipeline {
 
     }
     post {
-            // only triggered when blue or green sign
-            success {
-                 slackSend "${env.BUILD_NUMBER} completed "
-            }
+        always {
+            echo 'Slack Notifications.'
+            slackSend channel: '#jenkins-cicd',
+                message: " ${env.JOB_NAME} build ${env.BUILD_NUMBER} completed \n More info at: ${env.BUILD_URL}"
+        }
     }
 }
