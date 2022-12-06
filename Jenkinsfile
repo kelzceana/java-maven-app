@@ -39,8 +39,6 @@ pipeline {
         }
         stage('build JAR file') {
             steps {
-                slackSend channel: '#jenkins-cicd',
-                message: " ${env.JOB_NAME} build ${env.BUILD_NUMBER} started"
                 script {
                     echo "Building JAR file"
                     buildJar()
