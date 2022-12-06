@@ -67,11 +67,12 @@ pipeline {
                 }
             }
         }
-        post {
+
+    }
+    post {
             // only triggered when blue or green sign
             success {
                  slackSend "${env.BUILD_NUMBER} completed "
             }
-        }
     }
 }
