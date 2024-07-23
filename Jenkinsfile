@@ -1,49 +1,19 @@
-#!/usr/bin/env groovy
-
-library identifier: 'jenkins-shared-library@master', retriever: modernSCM(
-        [$class: 'GitSCMSource',
-         remote: 'https://gitlab.com/nanuchi/jenkins-shared-library.git',
-         credentialsId: 'gitlab-credentials'
-        ]
-)
-
-
-def gv
-
 pipeline {
     agent any
-    tools {
-        maven 'Maven'
-    }
     stages {
-        stage("init") {
+        stage ("build") {
             steps {
-                script {
-                    gv = load "script.groovy"
-                }
+                echo 'This is the build stage'  
             }
         }
-        stage("build jar") {
+        stage ("test") {
             steps {
-                script {
-                    buildJar()
-                }
+                echo 'This is the test stage'
             }
         }
-        stage("build and push image") {
+        stage ("deploy") {
             steps {
-                script {
-                    buildImage 'nanajanashia/demo-app:jma-3.0'
-                    dockerLogin()
-                    dockerPush 'nanajanashia/demo-app:jma-3.0'
-                }
-            }
-        }
-        stage("deploy") {
-            steps {
-                script {
-                    gv.deployApp()
-                }
+                echo 'This is the deploy stage'
             }
         }
     }
