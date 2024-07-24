@@ -17,7 +17,7 @@ pipeline {
         stage ("deploy") {
             steps {
                 echo 'This is the deploy stage'
-                echo "The commiter name is ${env.GIT_COMMITTER_NAME"}"
+                echo "The commiter name is ${env.GIT_COMMITTER_NAME}"
             }
         }
     }
