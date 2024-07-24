@@ -2,7 +2,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build' )
-        choices(name: 'LOCATION', choices ['uat-uber-datadb', 'uat-uber-service'])
+        choice(name: 'LOCATION', choices ['uat-uber-datadb', 'uat-uber-service'])
     }
     environment {
         NEW_VERSION = '1.0 '
