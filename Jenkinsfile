@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        NEW_VERSION = '1.0 '
+    }
     stages {
         stage ("build") {
             steps {
@@ -14,7 +17,7 @@ pipeline {
         stage ("deploy") {
             steps {
                 echo 'This is the deploy stage'
-                echo GIT_COMMITTER_NAME
+                echo %GIT_COMMITTER_NAME%
             }
         }
     }
