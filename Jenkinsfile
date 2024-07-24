@@ -20,7 +20,7 @@ pipeline {
         stage ("Build Image") {
             steps {
                 echo 'Building Image'
-                withCredentials([usernamePassword(credentialId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]){
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]){
                      sh 'docker build -t kelzceana/demo-app:3.0 .'
                      sh 'echo $PASS | docker login -u $USER --password-stdin'
                      sh 'docker push kelzceana/demo-app:3.0'
