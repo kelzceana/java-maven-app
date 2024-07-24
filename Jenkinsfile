@@ -1,4 +1,3 @@
-GIT_OWNER = GIT_COMMITTER_NAME()
 pipeline {
     agent any
     stages {
@@ -15,7 +14,7 @@ pipeline {
         stage ("deploy") {
             steps {
                 echo 'This is the deploy stage'
-                echo GIT_OWNER
+                echo GIT_COMMITTER_NAME
             }
         }
     }
