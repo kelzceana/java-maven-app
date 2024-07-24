@@ -8,14 +8,19 @@ pipeline {
         NEW_VERSION = '1.0 '
     }
     stages {
-        stage ("build") {
+        stage ("Build Jar") {
             steps {
-                echo 'This is the build stage'  
+                echo 'This is the build stage' 
+                sh 'mvn package'
             }
         }
-        stage ("test") {
+        stage ("Build Image") {
             steps {
-                echo 'This is the test stage'
+                echo 'Building Image'
+                withCredentials([usernamePassword(credentialId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')])
+                sh 'docker build -t kelzceana/demo-app:3.0 .'
+                sh 'echo $PASS | docker login -u $USER --password-stdin'
+                sh 'docker push kelzceana/demo-app:3.0'
             }
         }
         stage ("deploy") {
