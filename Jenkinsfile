@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'maven3.9'
+    }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build' )
         choice(name: 'LOCATION', choices: ['uat-uber-datadb', 'uat-uber-service'])
