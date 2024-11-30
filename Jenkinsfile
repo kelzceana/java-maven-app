@@ -8,7 +8,7 @@ pipeline {
         maven 'maven3.9'
     }
     stages {
-        stage ('Init') {
+        stage('Init') {
             steps {
                 script {
                     buildimage = load 'scripts/buildimage.groovy'
@@ -16,23 +16,29 @@ pipeline {
                 }
             }
         }
-        stage ('Build Jar') {
+        stage('Build Jar') {
             steps {
                 script {
                     buildjar.execute()
                 }
             }
         }
-        stage ('Build image') {
+        stage('Build image') {
             steps {
                 script {
                     buildimage.execute()
                 }
             }
         }
-        stage ('Deploy') {
+        stage('Deploy') {
             steps {
                 echo 'deploying application...'
+                def dockerCmd = 'docker run -p 3080:3080 -d kelzceana/my-webapp'
+                sshagent(['ec2-server-key']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@18.212.101.1'
+                    sh 'echo $PASS | docker login -u $USER --password-stdin'
+                    sh "${dockerCmd}"
+                }
             }
         }
     }
