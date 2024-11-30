@@ -35,15 +35,9 @@ pipeline {
                 echo 'deploying application...'
                 script {
                     def dockerCmd = 'docker run -p 3080:3080 -d kelzceana/my-webapp:1.0.0'
-                    withCredentials([(usernamePassword(credentialsId: 'dockerhub',
-                                                    usernameVariable: 'USER',
-                                                    passwordVariable: 'PASS'))]) {
-                                                        sshAgent(['ec2-server-key']) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ec2-user@18.212.101.1
-                    """
-                    }
-                                                    }
+                    sshAgent(['ec2-server-key']) {
+                    sh "-o StrictHostKeyChecking=no ec2-user@18.212.101.1 ${dockerCmd}"
+                    }                                  
                 }
             }
         }
