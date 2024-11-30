@@ -33,17 +33,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'deploying application...'
-                script {
-                    def dockerCmd = 'docker run -p 3080:3080 -d kelzceana/my-webapp:1.0.0'
-                    sshagent(['ec2-server-key']) {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no ec2-user@18.212.101.1 << EOF
-                            echo $PASS | docker login -u "$USER" --password-stdin
-                            docker run -p 3080:3080 -d kelzceana/my-webapp
-                            EOF
-                        """
-                    }
-                }
             }
         }
     }
