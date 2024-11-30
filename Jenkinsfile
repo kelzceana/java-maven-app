@@ -34,8 +34,8 @@ pipeline {
             steps {
                 echo 'deploying application...'
                 def dockerCmd = 'docker run -p 3080:3080 -d kelzceana/my-webapp:1.0.0'
-                withCredentials([(usernamePassword(credentialsId: 'dockerhub'
-                                                   usernameVariable: 'USER'
+                withCredentials([(usernamePassword(credentialsId: 'dockerhub',
+                                                   usernameVariable: 'USER',
                                                    passwordVariable: 'PASS'))]) {
                                                     sshAgent(['ec2-server-key']) {
                    sh """
