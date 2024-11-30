@@ -1,39 +1,48 @@
-
+def COLOR_MAP [
+    'SUCCESS': 'good'
+    'FAILURE': 'danger'
+]
 pipeline {
     agent any
     tools {
         maven 'maven3.9'
     }
-    parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build' )
-        choice(name: 'LOCATION', choices: ['uat-uber-datadb', 'uat-uber-service'])
-    }
-    environment {
-        NEW_VERSION = '1.0 '
-    }
     stages {
-        stage ("Build Jar") {
+        stage ('Init') {
             steps {
-                echo 'This is the build stage' 
-                sh 'mvn package'
-            }
-        }
-        stage ("Build Image") {
-            steps {
-                echo 'Building Image'
-                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASS')]){
-                     sh 'docker build -t kelzceana/demo-app:3.0 .'
-                     sh 'echo $PASS | docker login -u $USER --password-stdin'
-                     sh 'docker push kelzceana/demo-app:3.0'
+                scripts {
+                    buildimage = load 'scripts/buildimage.groovy'
+                    buildjar = load 'scripts/buildjar.groovy'
                 }
-               
             }
         }
-        stage ("deploy") {
+        stage ('Build Jar') {
             steps {
-                echo 'This is the deploy stage'
-                echo "The location of the deployment is ${params.LOCATION}"
+                scripts {
+                    buildjar.execute()
+                }
             }
+        }
+        stage ('Build image') {
+            steps {
+                scripts {
+                    buildimage.execute()
+                }
+            }
+        }
+        stage ('Deploy') {
+            steps {
+                echo 'deploying application...'
+            }
+        }
+    }
+    post {
+        always {
+            slackSend(
+                channel: '#automation-builds'
+                color: COLOR_MAP[currentBuild.currentResult]
+                message: "Build ${env.BUILD_NUMBER} was ${currentBuild.currentResult}. More details at ${env.BUILD_URL}"
+            )
         }
     }
 }

@@ -1,0 +1,13 @@
+def execute() {
+    echo 'Building docker image'
+    withCredentials([usernamePassword(credentialsId: 'dockerhub',
+                                      passwordVariable: 'PASS',
+                                      usernameVariable: 'USER')]) {
+        sh '''
+                docker build -t kelzceana/my-webapp:1.0.02
+                echo $PASS | docker login -u $USER --password-stdin
+                docker push kelzceana/my-webapp:1.0.02
+                '''
+                                                  }
+}
+return this
