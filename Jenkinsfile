@@ -41,7 +41,7 @@ pipeline {
                                                         sshAgent(['ec2-server-key']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ec2-user@18.212.101.1 << EOF
-                    echo $PASS | docker login -u $USER --password-stdin $dockerCmd
+                    echo "$PASS" | docker login -u "$USER" --password-stdin $dockerCmd
                     EOF
                     """
                     }
