@@ -6,7 +6,7 @@ def execute() {
         sh '''
                 docker build -t kelzceana/my-webapp:latest .
                 echo $PASS | docker login -u $USER --password-stdin
-                docker push kelzceana/my-webapp:1.0.02
+                docker push kelzceana/my-webapp:latest
                 '''
                                                   }
 }
