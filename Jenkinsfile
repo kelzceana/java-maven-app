@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage ('Init') {
             steps {
-                scripts {
+                script {
                     buildimage = load 'scripts/buildimage.groovy'
                     buildjar = load 'scripts/buildjar.groovy'
                 }
@@ -19,14 +19,14 @@ pipeline {
         //
         stage ('Build Jar') {
             steps {
-                scripts {
+                script {
                     buildjar.execute()
                 }
             }
         }
         stage ('Build image') {
             steps {
-                scripts {
+                script {
                     buildimage.execute()
                 }
             }
